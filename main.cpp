@@ -22,6 +22,15 @@ int main()
     int k = b.neighbours(0);
     printf("%d \n",k);
 
+
+    //test of the velocity methods
+
+    double * v1 =b.velocity2(0);
+    printf("%f %f \n", v1[0] , v1[1]); //avec velocity1 on obtient  0,0 c'est normal car les deux agents ont la même vitesse
+
+    delete [] v1;
+
+
     /*
     bwindow win(640,480);
     printf("%d\n",win.init());

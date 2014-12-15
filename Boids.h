@@ -66,10 +66,10 @@ class Boids
     void addAgent(Agent a);
     bool perception(Agent a1, Agent a2);
     int neighbours( int position);
-    void velocity1(Agent a);
-    void velocity2(Agent a);
-    void velocity3(Agent a);
-    void totalVelocity(Agent a);
+    double * velocity1(int p);
+    double * velocity2(int p);
+    double * velocity3(int p);
+    void totalVelocity(int p);
 
     // =======================================================================
     //                             Public Attributes

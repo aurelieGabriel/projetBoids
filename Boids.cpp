@@ -98,18 +98,47 @@ int Boids::neighbours( int position)
   return k--;
 }
 
-void Boids::velocity1(Agent a)
+double * Boids::velocity1(int p) //int p et pas Agent a car si l'utilisateur envoie un agent qui n'est pas dans le tableau ça ne va pas
 {
 
+  double * tab = new double[2];
+  double vx = 0;
+  double vy = 0;
+  int i;
+  for(i=0;i<nb_agents; i++)
+    {
+      if(perception(data[i], data[p]))
+        {
+          vx = (data[i].vx - data[p].vx)/neighbours(p);
+          vy = (data[i].vy - data[p].vy)/neighbours(p);
+        }
+    }
+  tab[0]= vx;
+  tab[1]=vy;
+  return tab;
 
 }
 
-void Boids::velocity2(Agent a)
+double * Boids::velocity2(int p)
 {
-
+  double * tab = new double[2];
+  double x = 0;
+  double y = 0;
+  int i;
+  for(i=0;i<nb_agents; i++)
+    {
+      if(perception(data[i], data[p]))
+        {
+          x = (data[i].x - data[p].x)/neighbours(p);
+          y = (data[i].y - data[p].y)/neighbours(p);
+        }
+    }
+  tab[0]= x;
+  tab[1]= y;
+  return tab;
 }
 
-void Boids::totalVelocity(Agent a)
+void Boids::totalVelocity(int p)
 {
 
 }
