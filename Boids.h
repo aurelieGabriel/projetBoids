@@ -19,6 +19,7 @@
 
 
 
+
 // ===========================================================================
 //                                Project Files
 // ===========================================================================
@@ -64,8 +65,8 @@ class Boids
     // =======================================================================
 
     void addAgent(Agent a);
-    bool perception(Agent a1, Agent a2);
-    int neighbours( int position);
+    bool perception(Agent a1, Agent a2 , double distance);
+    int * neighbours( int position, double distance);  // car dépend si le rayon de proximité c'est r ou c
     double * velocity1(int p);
     double * velocity2(int p);
     double * velocity3(int p);

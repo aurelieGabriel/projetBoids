@@ -18,20 +18,25 @@ int main()
     b.addAgent(a1);
     b.addAgent(a2);
    
-    printf("%d \n",b.perception(a1,a2));
-    int k = b.neighbours(0);
-    printf("%d \n",k);
-
-
+    
+    //printf("%d \n",b.neighbours(0,Agent::R));
+    
     //test of the velocity methods
-
     double * v1 =b.velocity2(0);
     printf("%f %f \n", v1[0] , v1[1]); //avec velocity1 on obtient  0,0 c'est normal car les deux agents ont la même vitesse
 
+    Agent a3 = Agent(true);
+	b.addAgent(a3);
+	printf("%f %f\n",a3.GetX(),a3.GetY());
+	
+	int * tab = b.neighbours(0,Agent::R);
+	printf("%d \n",tab[0]);
+	
+	delete [] tab;
     delete [] v1;
 
 
-    /*
+    /* 
     bwindow win(640,480);
     printf("%d\n",win.init());
     win.map();
