@@ -70,8 +70,8 @@ class Boids
     double * velocity1(int p);
     double * velocity2(int p);
     double * velocity3(int p);
-    void totalVelocity(int p);
-
+    void totalVelocity(double gamma1, double gamma2, double gamma3, double h);
+    void position(double gamma1, double gamma2, double gamma3,double h);
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
