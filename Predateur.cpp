@@ -16,20 +16,21 @@
 // ===========================================================================
 //                                 Project Files
 // ===========================================================================
-#include "Agent.h"
+#include "Predateur.h"
 #include "bwindow.h"
+#include "Agent.h"
 
 
 
 
 //############################################################################
 //                                                                           #
-//                           Class Agent                                     #
+//                           Class Predateur                                 #
 //                                                                           #
 //############################################################################
 
-const double Agent::R = 200;
-const double Agent::C = 30;
+const double Predateur::Rp = 100;
+
 
 // ===========================================================================
 //                         Definition of static attributes
@@ -38,32 +39,22 @@ const double Agent::C = 30;
 // ===========================================================================
 //                                  Constructors
 // ===========================================================================
-Agent::Agent(void)
+Predateur::Predateur(void)
 {
  
   x=(rand()/(double)RAND_MAX)*640;
   y=(rand()/(double)RAND_MAX)*480;
-  isObstacle = false;
-  isPredateur = false;
-  vx=0;
-  vy=0;
+  isObstacle=false;
+  isPredateur=true;
+  vx=(rand()/(double)RAND_MAX)*2;
+  vy=(rand()/(double)RAND_MAX)*2;
 
-}
-
-Agent :: Agent(bool b)
-{
-  x=(rand()/(double)RAND_MAX)*640;
-  y=(rand()/(double)RAND_MAX)*480;
-  isObstacle = b;
-  isPredateur = false;
-  vx=0;
-  vy=0;
 }
 
 // ===========================================================================
 //                                  Destructor
 // ===========================================================================
-Agent::~Agent(void)
+Predateur::~Predateur(void)
 {
 }
 
@@ -71,10 +62,15 @@ Agent::~Agent(void)
 //                                 Public Methods
 // ===========================================================================
 
-// ===========================================================================
-//                                Protected Methods
-// ===========================================================================
-
-// ===========================================================================
-//                               Non inline accessors
-// ===========================================================================
+bool Predateur::peutBouger()
+{
+	bool b;
+	if(h == 50)
+	{
+		b=true;
+	}
+	else
+	{
+		b=false;
+	}
+}

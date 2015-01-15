@@ -154,37 +154,7 @@ double * Boids::velocity2(int p)
   tab[1]= vy;
   return tab;
 }
-/*
-double * Boids::velocity3(int p)
-{
-	
-	double * tab = new double[2];
-	tab[0]=0;
-	tab[1]=0;
-	int * tabNeighbours = neighbours(p,Agent::C);
-	double vxa, vya, vxo , vyo=0;
-	int i;
-	for(i=0; i<nb_agents; i++)
-	{
-		
-      if(perception(data[p], data[i], Agent::C) && !data[i].isObstacle && tabNeighbours[0] != 0)
-      {
-        vxa += (data[i].x - data[p].x)/tabNeighbours[0];
-        vya += (data[i].y - data[p].y)/tabNeighbours[0];
-      }
-      else if(perception(data[p], data[i], Agent::C) && data[i].isObstacle && tabNeighbours[1] != 0)
-      {
-		vxo += (data[i].x - data[p].x)/tabNeighbours[1];
-        vyo += (data[i].y - data[p].y)/tabNeighbours[1];
-	  }
 
-	}
-	 tab[0] = - vxa - vxo;
-	 tab[1] = - vya - vyo;
-	
-	return tab;
-	
-}*/
 double * Boids::velocity3(int p)
 {
   double * v3 = new double[2];
@@ -212,34 +182,98 @@ double * Boids::velocity3(int p)
   return v3;
 }
 
-void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double h)
+double * Boids::velocity4(int p)
+{
+	double * v4 = new double[2];
+	v4[0]=0;
+	v4[1]=0;
+	double xp;
+	double yp;
+	int i;
+	for(i=0; i<nb_agents; i++)
+	{
+		if(data[i].isPredateur)
+		{
+			xp = data[i].x;
+			yp = data[i].y;
+			
+			
+		}
+	}
+	if(sqrt((data[p].x - xp)*(data[p].x - xp) + (data[p].y - yp )*(data[p].y - yp))<Agent::R)
+	{
+		if(!data[p].isPredateur)
+		{
+	      v4[0]= -((xp-data[p].x)/sqrt((xp-data[p].x)*(xp-data[p].x)+(yp-data[p].y)*(yp-data[p].y)));
+	      v4[1]= -((yp-data[p].y)/sqrt((xp-data[p].x)*(xp-data[p].x)+(yp-data[p].y)*(yp-data[p].y)));
+	    }
+    }
+	return v4;
+}
+
+void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double gamma4, double h)
 {
 
   int i;
   double * v1;
   double * v2;
   double * v3;
+  double * v4;
+  double k = 0.5;
+  double vmax = 50;
   for(i=0; i<nb_agents ; i++)
   {
 	  if(!data[i].isObstacle)
 	  {
 	    v1 = velocity1(i);
 	    v2 = velocity2(i);
-	    v3 = velocity3(i); 	
+	    v3 = velocity3(i); 
+	    v4 = velocity4(i);
+	    if(data[i].y<50)
+	    {
+	     //data[i].vx += h*(gamma1*v1[0] + gamma2*v2[0] + gamma3*v3[0] + gamma4*v4[0]);
+	    
+	     data[i].vy = data[i].vy + k ;
+	    }
+	    else if(data[i].x>1300)
+	    {
+	     data[i].vx = data[i].vx - k;
+	     //data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1] +  gamma4*v4[1]);
+	    }
+	    else if(data[i].y>1000)
+	    {
+	     //data[i].vx +=h*(gamma1*v1[0] + gamma2*v2[0] + gamma3*v3[0] +  gamma4*v4[0]);
+	     data[i].vy = data[i].vy - k ;
+	    }
+	    else if(data[i].x<50)
+	    {
+	     data[i].vx = data[i].vx + k;
+	     //data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1] + gamma4*v4[1]) ;
+	    }
+	    else
+	    {
+	    
+	 
 	    //printf(" dans méthode %d % f %f %f \n",i,v1[0],v2[0],v3[0]);
-	    data[i].vx += h*(gamma1*v1[0] + gamma2*v2[0] + gamma3*v3[0]);
+	    data[i].vx += h*(gamma1*v1[0] + gamma2*v2[0] + gamma3*v3[0] + gamma4*v4[0]);
 	    //printf(" dans méthode % f \n",data[i].vx);
-	    data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1]);   //attention problème on calcule les velocity1 2 et 3 à partir des vx et vy précédents
+	    data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1]+ gamma4*v4[1]);   //attention problème on calcule les velocity1 2 et 3 à partir des vx et vy précédents
+        }
+        
+        
+        //if()
+	    
       }  
   }
 
 }
 
-void Boids::position(double gamma1, double gamma2, double gamma3, double h)
+
+void Boids::position(double gamma1, double gamma2, double gamma3, double gamma4, double h)
 {
 
   int i;
-  this->totalVelocity(gamma1, gamma2, gamma3,h);
+  this->totalVelocity(gamma1, gamma2, gamma3, gamma4, h);
   for(i=0; i<nb_agents; i++)
     {
 	  if(!data[i].isObstacle)
@@ -251,6 +285,48 @@ void Boids::position(double gamma1, double gamma2, double gamma3, double h)
 	
 }
 
+/*
+void Boids::position(double gamma1, double gamma2, double gamma3, double h)
+{
+
+  int i;
+  this->totalVelocity(gamma1, gamma2, gamma3,h);
+  for(i=0; i<nb_agents; i++)
+    {
+	  if(!data[i].isObstacle)
+	  {
+	    if(data[i].y<50)
+	    {
+	     data[i].x += h*(data[i].vx);
+	     data[i].y -= h*(data[i].vy/3) ;
+	    }
+	    else if(data[i].x>1490)
+	    {
+	     data[i].x -= h*(data[i].vx/3);
+	     data[i].y += h*(data[i].vy) ;
+	    }
+	    else if(data[i].y>1490)
+	    {
+	     data[i].x += h*(data[i].vx);
+	     data[i].y -= h*(data[i].vy/3) ;
+	    }
+	    else if(data[i].x<50)
+	    {
+	     data[i].x -= h*(data[i].vx/3);
+	     data[i].y += h*(data[i].vy) ;
+	    }
+	    else
+	    {
+		  data[i].x += h*data[i].vx;
+		  data[i].y += h*data[i].vy;
+	    }
+	    
+	  }
+	  printf("%d   %f %f \n",i, data[i].x, data[i].y);
+    }
+	
+}
+*/
 
 // ===========================================================================
 //                                Protected Methods

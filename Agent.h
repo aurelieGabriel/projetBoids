@@ -103,6 +103,7 @@ class Agent
     // =======================================================================
 
     bool isObstacle;
+    bool isPredateur;
     double x;
     double y;
     double vx;
