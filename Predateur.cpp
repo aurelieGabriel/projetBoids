@@ -19,8 +19,7 @@
 #include "Predateur.h"
 #include "bwindow.h"
 #include "Agent.h"
-
-
+#include <math.h>
 
 
 //############################################################################
@@ -29,7 +28,7 @@
 //                                                                           #
 //############################################################################
 
-const double Predateur::Rp = 100;
+const double Predateur::Rp = 60;
 
 
 // ===========================================================================
@@ -46,8 +45,9 @@ Predateur::Predateur(void)
   y=(rand()/(double)RAND_MAX)*480;
   isObstacle=false;
   isPredateur=true;
-  vx=(rand()/(double)RAND_MAX)*2;
-  vy=(rand()/(double)RAND_MAX)*2;
+  vx=10 ;
+  vy=-10 ;
+  h=10;
 
 }
 
@@ -62,6 +62,31 @@ Predateur::~Predateur(void)
 //                                 Public Methods
 // ===========================================================================
 
+void Predateur::velocityPredator()
+{
+	double vMax=1.5;
+	
+	if(h<10)
+	{
+		vx = 0;
+		vy = 0;
+		h ++;
+	}
+	else
+	{
+	  
+      vx +=(rand()/(double)RAND_MAX)*2 -1;
+      vy +=(rand()/(double)RAND_MAX)*2-1;
+      double normV = sqrt(vx*vx+vy*vy);
+      if(normV>vMax)
+      {
+		  vx=vx/(normV/vMax);
+		  vy=vy/(normV/vMax);
+	  }
+      
+	}
+}
+
 bool Predateur::peutBouger()
 {
 	bool b;
@@ -74,3 +99,5 @@ bool Predateur::peutBouger()
 		b=false;
 	}
 }
+
+

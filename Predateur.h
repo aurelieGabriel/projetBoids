@@ -22,6 +22,7 @@
 
 
 
+
 // ===========================================================================
 //                                Project Files
 // ===========================================================================
@@ -50,7 +51,8 @@ class Predateur: public Agent
     virtual ~Predateur(void);
 
     bool peutBouger();
-
+    void velocityPredator();
+   // Agent voitUneProie(Boids b);
     
 
 

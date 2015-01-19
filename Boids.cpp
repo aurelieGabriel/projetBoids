@@ -41,10 +41,23 @@
 Boids::Boids(void)
 {
 
-  nb_agents = 0;
-  data = new Agent[50];
+  nb_agents = 10;
+  data = new Agent[35];
+  
+  int i;
+  for(i=0; i<nb_agents; i++)
+  {
+	  Agent a ;
+	  data[i]= a;
+	 
+  }
+  datap = new Predateur[10];
+  Predateur p;
+  datap[0] = p;
 
 }
+
+
 
 // ===========================================================================
 //                                  Destructor
@@ -155,6 +168,7 @@ double * Boids::velocity2(int p)
   return tab;
 }
 
+
 double * Boids::velocity3(int p)
 {
   double * v3 = new double[2];
@@ -178,7 +192,6 @@ double * Boids::velocity3(int p)
         }
   v3[0]= - v3xa - v3xo;
   v3[1]= - v3ya - v3yo;
-  
   return v3;
 }
 
@@ -189,25 +202,23 @@ double * Boids::velocity4(int p)
 	v4[1]=0;
 	double xp;
 	double yp;
-	int i;
-	for(i=0; i<nb_agents; i++)
-	{
-		if(data[i].isPredateur)
-		{
-			xp = data[i].x;
-			yp = data[i].y;
-			
-			
-		}
-	}
-	if(sqrt((data[p].x - xp)*(data[p].x - xp) + (data[p].y - yp )*(data[p].y - yp))<Agent::R)
-	{
-		if(!data[p].isPredateur)
-		{
-	      v4[0]= -((xp-data[p].x)/sqrt((xp-data[p].x)*(xp-data[p].x)+(yp-data[p].y)*(yp-data[p].y)));
-	      v4[1]= -((yp-data[p].y)/sqrt((xp-data[p].x)*(xp-data[p].x)+(yp-data[p].y)*(yp-data[p].y)));
-	    }
-    }
+	int j;
+	
+
+	  for(j=0;j<1;j++)
+        {
+		  xp = datap[j].x;
+		  yp=datap[j].y;
+	      if(sqrt((data[p].x - xp)*(data[p].x - xp) + (data[p].y - yp )*(data[p].y - yp))<Agent::R)
+	      {
+		    if(!data[p].isPredateur)
+		      {
+	            v4[0]= -((xp-data[p].x)/sqrt((xp-data[p].x)*(xp-data[p].x)+(yp-data[p].y)*(yp-data[p].y)));
+	            v4[1]= -((yp-data[p].y)/sqrt((xp-data[p].x)*(xp-data[p].x)+(yp-data[p].y)*(yp-data[p].y)));
+	          }
+         }
+	 }
+    
 	return v4;
 }
 
@@ -219,7 +230,7 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
   double * v2;
   double * v3;
   double * v4;
-  double k = 0.5;
+  double k = 1;
   double vmax = 50;
   for(i=0; i<nb_agents ; i++)
   {
@@ -230,40 +241,73 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 	    v3 = velocity3(i); 
 	    v4 = velocity4(i);
 	    if(data[i].y<50)
-	    {
-	     //data[i].vx += h*(gamma1*v1[0] + gamma2*v2[0] + gamma3*v3[0] + gamma4*v4[0]);
-	    
+	    {    
 	     data[i].vy = data[i].vy + k ;
 	    }
-	    else if(data[i].x>1300)
+	    else if(data[i].x>630)
 	    {
-	     data[i].vx = data[i].vx - k;
-	     //data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1] +  gamma4*v4[1]);
+	     data[i].vx = -data[i].vx - k;
 	    }
-	    else if(data[i].y>1000)
+	    else if(data[i].y>430)
 	    {
-	     //data[i].vx +=h*(gamma1*v1[0] + gamma2*v2[0] + gamma3*v3[0] +  gamma4*v4[0]);
-	     data[i].vy = data[i].vy - k ;
+	     data[i].vy = -data[i].vy - k ;
 	    }
 	    else if(data[i].x<50)
 	    {
 	     data[i].vx = data[i].vx + k;
-	     //data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1] + gamma4*v4[1]) ;
 	    }
 	    else
 	    {
-	    
-	 
-	    //printf(" dans méthode %d % f %f %f \n",i,v1[0],v2[0],v3[0]);
 	    data[i].vx += h*(gamma1*v1[0] + gamma2*v2[0] + gamma3*v3[0] + gamma4*v4[0]);
-	    //printf(" dans méthode % f \n",data[i].vx);
-	    data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1]+ gamma4*v4[1]);   //attention problème on calcule les velocity1 2 et 3 à partir des vx et vy précédents
+	    data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1]+ gamma4*v4[1]);   // on calcule les velocity1 2 et 3 à partir des vx et vy précédents
         }
-        
-        
-        //if()
+
 	    
       }  
+  }
+  
+  
+  int k2=1;
+  
+  for(i=0; i<1;i++)
+  {
+	   
+	   int nbProies = proiePresDePredateur(datap[i]);
+	   if(datap[i].y<50)
+	    {    
+	     datap[i].vy = datap[i].vy + k2 ;
+	    }
+	    else if(datap[i].x>630)
+	    {
+	     datap[i].vx = -datap[i].vx - k2;	     
+	    }
+	    else if(datap[i].y>430)
+	    {	     
+	     datap[i].vy = -datap[i].vy - k2;
+	    }
+	    else if(data[i].x<50)
+	    {
+	     datap[i].vx = datap[i].vx + k2;	     
+	    }
+	    else if(nbProies !=0)
+	    {
+			Agent a = predateurVoitProie(datap[i]);
+			
+			if(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y))<10)
+			{
+				mangerProie(a,datap[i]);
+			}
+			else
+			{
+			
+			datap[i].vx = (a.x - datap[i].x)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
+			data[i].vy = (a.y - datap[i].y)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
+		    }
+		}
+	    else
+	    {
+	      datap[i].velocityPredator();
+	    }
   }
 
 }
@@ -282,56 +326,63 @@ void Boids::position(double gamma1, double gamma2, double gamma3, double gamma4,
 		data[i].y += h*data[i].vy;
 	  }
     }
+  for(i=0;i<1;i++)
+  {
+	  datap[i].x += datap[i].vx;
+	  datap[i].y += datap[i].vy;
+  }
 	
 }
 
-/*
-void Boids::position(double gamma1, double gamma2, double gamma3, double h)
+int Boids::proiePresDePredateur(Predateur p)
 {
-
   int i;
-  this->totalVelocity(gamma1, gamma2, gamma3,h);
+  int nbProies=0;
   for(i=0; i<nb_agents; i++)
     {
-	  if(!data[i].isObstacle)
-	  {
-	    if(data[i].y<50)
-	    {
-	     data[i].x += h*(data[i].vx);
-	     data[i].y -= h*(data[i].vy/3) ;
-	    }
-	    else if(data[i].x>1490)
-	    {
-	     data[i].x -= h*(data[i].vx/3);
-	     data[i].y += h*(data[i].vy) ;
-	    }
-	    else if(data[i].y>1490)
-	    {
-	     data[i].x += h*(data[i].vx);
-	     data[i].y -= h*(data[i].vy/3) ;
-	    }
-	    else if(data[i].x<50)
-	    {
-	     data[i].x -= h*(data[i].vx/3);
-	     data[i].y += h*(data[i].vy) ;
-	    }
-	    else
-	    {
-		  data[i].x += h*data[i].vx;
-		  data[i].y += h*data[i].vy;
-	    }
-	    
-	  }
-	  printf("%d   %f %f \n",i, data[i].x, data[i].y);
+        if(sqrt((data[i].x -p.x)*(data[i].x -p.x)+(data[i].y -p.y)*(data[i].y -p.y))<Predateur::Rp)
+	   {		   
+		   nbProies ++;
+	   }
     }
+  return nbProies;  
 	
 }
-*/
 
-// ===========================================================================
-//                                Protected Methods
-// ===========================================================================
+Agent Boids::predateurVoitProie(Predateur p)
+{	
+	int i;
+	Agent a;
+	double distance;
+	distance=1000;
+	double newDistance;
+	for(i=0;i<nb_agents; i++)
+	{
+		newDistance = sqrt((data[i].x - p.x)*(data[i].x - p.x) + (data[i].x - p.x)*(data[i].y - p.y));
+		if(distance > newDistance)
+		{
+			distance = newDistance;
+			a = data[i];
+		}
+	}
+	return a;
+}
 
-// ===========================================================================
-//                               Non inline accessors
-// ===========================================================================
+void Boids::mangerProie(Agent a, Predateur p)
+{
+	p.h = 0;
+	int i;
+	int indice;
+	for(i=0; i<nb_agents; i++)
+	{
+		if(data[i].x==a.x || data[i].y==a.y )
+		{
+			indice =i;
+		}
+	}
+	for(i=indice; i<nb_agents-1; i++)
+	{
+		data[i]=data[i+1];
+	}
+	
+}

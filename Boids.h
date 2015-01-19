@@ -16,6 +16,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include "Agent.h"
+#include "Predateur.h"
 
 
 
@@ -41,6 +42,7 @@ class Boids
     //                               Constructors
     // =======================================================================
     Boids(void);
+    
 
     // =======================================================================
     //                                Destructor
@@ -73,61 +75,24 @@ class Boids
     double * velocity4(int p);
     void totalVelocity(double gamma1, double gamma2, double gamma3, double gamma4, double h);
     void position(double gamma1, double gamma2, double gamma3, double gamma4, double h);
+    Agent predateurVoitProie(Predateur p);
+    int proiePresDePredateur(Predateur p);
+    void mangerProie(Agent a, Predateur p);
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
 
     
-
   public :
 
-    // =======================================================================
-    //                            Forbidden Constructors
-    // =======================================================================
-    /*Boids(void)
-    {
-      printf("%s:%d: error: call to forbidden constructor.\n", __FILE__, __LINE__);
-      exit(EXIT_FAILURE);
-    };
-    Boids(const Boids &model)
-    {
-      printf("%s:%d: error: call to forbidden constructor.\n", __FILE__, __LINE__);
-      exit(EXIT_FAILURE);
-    };*/
 
-
-    // =======================================================================
-    //                              Protected Methods
-    // =======================================================================
-
-    // =======================================================================
-    //                             Protected Attributes
-    // =======================================================================
-
-   
+    Predateur * datap;
     Agent * data;
     int nb_agents;
 
 
 };
 
-
-// ===========================================================================
-//                              Getters' definitions
-// ===========================================================================
-
-
-// ===========================================================================
-//                              Setters' definitions
-// ===========================================================================
-
-// ===========================================================================
-//                             Operators' definitions
-// ===========================================================================
-
-// ===========================================================================
-//                          Inline functions' definition
-// ===========================================================================
 
 
 #endif // __BOIDS_H__
