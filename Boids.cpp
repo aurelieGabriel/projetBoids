@@ -41,8 +41,8 @@
 Boids::Boids(void)
 {
 
-  nb_agents = 10;
-  data = new Agent[35];
+  nb_agents = 50;
+  data = new Agent[75];
   
   int i;
   for(i=0; i<nb_agents; i++)
@@ -285,23 +285,24 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 	    {	     
 	     datap[i].vy = -datap[i].vy - k2;
 	    }
-	    else if(data[i].x<50)
+	    else if(datap[i].x<50)
 	    {
 	     datap[i].vx = datap[i].vx + k2;	     
 	    }
-	    else if(nbProies !=0)
+	    else if((nbProies !=0) || (datap[i].h<20))
 	    {
 			Agent a = predateurVoitProie(datap[i]);
 			
-			if(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y))<10)
+			
+			if((sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y))<10 ))
 			{
 				mangerProie(a,datap[i]);
 			}
-			else
+			else   // non ici si h<20 il va quand même vers la prochaine proie
 			{
 			
 			datap[i].vx = (a.x - datap[i].x)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
-			data[i].vy = (a.y - datap[i].y)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
+			datap[i].vy = (a.y - datap[i].y)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
 		    }
 		}
 	    else
@@ -358,12 +359,15 @@ Agent Boids::predateurVoitProie(Predateur p)
 	double newDistance;
 	for(i=0;i<nb_agents; i++)
 	{
-		newDistance = sqrt((data[i].x - p.x)*(data[i].x - p.x) + (data[i].x - p.x)*(data[i].y - p.y));
-		if(distance > newDistance)
+		if(!data[i].isObstacle)
 		{
+		  newDistance = sqrt((data[i].x - p.x)*(data[i].x - p.x) + (data[i].x - p.x)*(data[i].y - p.y));
+		  if(distance > newDistance)
+		  {
 			distance = newDistance;
 			a = data[i];
-		}
+		  }
+	    } 
 	}
 	return a;
 }
@@ -375,14 +379,16 @@ void Boids::mangerProie(Agent a, Predateur p)
 	int indice;
 	for(i=0; i<nb_agents; i++)
 	{
-		if(data[i].x==a.x || data[i].y==a.y )
-		{
+
+		  if(data[i].x==a.x || data[i].y==a.y )
+		  {
 			indice =i;
-		}
+		  }
+
 	}
 	for(i=indice; i<nb_agents-1; i++)
 	{
-		data[i]=data[i+1];
+		  data[i]=data[i+1];
 	}
 	
 }

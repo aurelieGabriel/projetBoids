@@ -47,7 +47,7 @@ Predateur::Predateur(void)
   isPredateur=true;
   vx=10 ;
   vy=-10 ;
-  h=10;
+  h=21;
 
 }
 
@@ -66,7 +66,7 @@ void Predateur::velocityPredator()
 {
 	double vMax=1.5;
 	
-	if(h<10)
+	if(h<20)
 	{
 		vx = 0;
 		vy = 0;
