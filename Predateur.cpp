@@ -28,7 +28,7 @@
 //                                                                           #
 //############################################################################
 
-const double Predateur::Rp = 60;
+const double Predateur::Rp = 80;
 
 
 // ===========================================================================
@@ -47,7 +47,7 @@ Predateur::Predateur(void)
   isPredateur=true;
   vx=10 ;
   vy=-10 ;
-  h=21;
+  a=51;
 
 }
 
@@ -65,15 +65,7 @@ Predateur::~Predateur(void)
 void Predateur::velocityPredator()
 {
 	double vMax=1.5;
-	
-	if(h<20)
-	{
-		vx = 0;
-		vy = 0;
-		h ++;
-	}
-	else
-	{
+
 	  
       vx +=(rand()/(double)RAND_MAX)*2 -1;
       vy +=(rand()/(double)RAND_MAX)*2-1;
@@ -83,14 +75,19 @@ void Predateur::velocityPredator()
 		  vx=vx/(normV/vMax);
 		  vy=vy/(normV/vMax);
 	  }
-      
-	}
+
+}
+void Predateur::attente()
+{
+	vx = 0;
+    vy = 0;
+	a ++;
 }
 
 bool Predateur::peutBouger()
 {
 	bool b;
-	if(h == 50)
+	if(a >50)
 	{
 		b=true;
 	}
@@ -98,6 +95,7 @@ bool Predateur::peutBouger()
 	{
 		b=false;
 	}
+	return b;
 }
 
 

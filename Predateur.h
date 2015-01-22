@@ -53,7 +53,7 @@ class Predateur: public Agent
     bool peutBouger();
     void velocityPredator();
    // Agent voitUneProie(Boids b);
-    
+    void attente();
 
 
 
@@ -63,8 +63,8 @@ class Predateur: public Agent
 
 
     static const double Rp;
-    double h;
-
+    
+    int a;
     
 };
 

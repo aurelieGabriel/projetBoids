@@ -41,8 +41,8 @@
 Boids::Boids(void)
 {
 
-  nb_agents = 50;
-  data = new Agent[75];
+  nb_agents = 100;
+  data = new Agent[150];
   
   int i;
   for(i=0; i<nb_agents; i++)
@@ -230,7 +230,7 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
   double * v2;
   double * v3;
   double * v4;
-  double k = 1;
+  double k = 2;
   double vmax = 50;
   for(i=0; i<nb_agents ; i++)
   {
@@ -244,11 +244,11 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 	    {    
 	     data[i].vy = data[i].vy + k ;
 	    }
-	    else if(data[i].x>630)
+	    else if(data[i].x>1200)
 	    {
 	     data[i].vx = -data[i].vx - k;
 	    }
-	    else if(data[i].y>430)
+	    else if(data[i].y>900)
 	    {
 	     data[i].vy = -data[i].vy - k ;
 	    }
@@ -277,11 +277,11 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 	    {    
 	     datap[i].vy = datap[i].vy + k2 ;
 	    }
-	    else if(datap[i].x>630)
+	    else if(datap[i].x>1200)
 	    {
 	     datap[i].vx = -datap[i].vx - k2;	     
 	    }
-	    else if(datap[i].y>430)
+	    else if(datap[i].y>900)
 	    {	     
 	     datap[i].vy = -datap[i].vy - k2;
 	    }
@@ -289,7 +289,8 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 	    {
 	     datap[i].vx = datap[i].vx + k2;	     
 	    }
-	    else if((nbProies !=0) || (datap[i].h<20))
+	    /*
+	    else if((nbProies !=0) || (datap[i].h<500))
 	    {
 			Agent a = predateurVoitProie(datap[i]);
 			
@@ -309,6 +310,39 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 	    {
 	      datap[i].velocityPredator();
 	    }
+	    */
+	    
+	    else 
+	    {
+			if(datap[i].peutBouger())
+			
+			{
+			  if(nbProies !=0)
+			  {	
+
+		      Agent a = predateurVoitProie(datap[i]);
+
+			  if((sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y))<10))
+			  {
+				mangerProie(a,datap[i]);
+			  }
+			  else   
+			  {
+	            datap[i].vx = 2*(a.x - datap[i].x)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
+			    datap[i].vy = 2*(a.y - datap[i].y)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
+		      }
+		      }
+		      else
+		      {
+				datap[i].velocityPredator();  
+			  }
+			}
+			else if(!datap[i].peutBouger())
+			{
+				datap[i].attente();
+			}
+			
+		}
   }
 
 }
@@ -374,7 +408,7 @@ Agent Boids::predateurVoitProie(Predateur p)
 
 void Boids::mangerProie(Agent a, Predateur p)
 {
-	p.h = 0;
+	datap[0].a= 0;
 	int i;
 	int indice;
 	for(i=0; i<nb_agents; i++)

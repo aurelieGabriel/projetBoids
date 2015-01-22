@@ -20,7 +20,7 @@ int main()
 
 
     
-    bwindow win(640,480);
+    bwindow win(1500,1500);
     printf("%d\n",win.init());
     win.map();
     for(;;)
@@ -40,7 +40,7 @@ int main()
 		printf("configure\n"); break;
 	}
 	int i;
-	win.draw_fsquare(0,0,640,480,0xFEFEFE);
+	win.draw_fsquare(0,0,1500,1500,0xFEFEFE);
 	
 	for(i=0; i<b.nb_agents;i++)
 	{
@@ -77,7 +77,7 @@ int main()
 	}*/
 	
 	usleep(10000);
-	b.position(0.2,0.2,1,1,0.08);
+	b.position(0.1,0.1,1.5,2.5,0.1);
 	
 	
 	//win.draw_fsquare(90,90,110,110,0xFF00);
