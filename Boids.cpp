@@ -41,19 +41,30 @@
 Boids::Boids(void)
 {
 
-  nb_agents = 100;
+  nb_agents = 150;
   data = new Agent[150];
   
   int i;
   for(i=0; i<nb_agents; i++)
   {
 	  Agent a ;
-	  data[i]= a;
+	  Agent b= Agent(true);
+	  if(i<146)
+	  {
+		  data[i]= a;
+	  }
+	  else
+	  {
+		  data[i]= b;
+	  }
+	  
 	 
   }
+  
   datap = new Predateur[10];
   Predateur p;
   datap[0] = p;
+  printf("mort: %d",datap[0].mort);
 
 }
 
@@ -76,7 +87,9 @@ Boids::~Boids(void)
 
 void Boids::addAgent(Agent a)
 {
-
+  printf("j'ajoute un agent!!! ");
+  printf("%d nbAgents : %d \n", a.isObstacle, nb_agents);
+  
   data[nb_agents] = a;
   nb_agents ++;
 
@@ -177,8 +190,10 @@ double * Boids::velocity3(int p)
   v3[1]=0;
   int i;
   double v3xa=0,v3xo=0,v3ya=0,v3yo=0; // variables intérmédiaires pour stocker la somme avant de diviser le tout
+
   for(i=0;i<nb_agents;i++)
     {
+		
           if(perception(data[p],data[i],Agent::C) && !data[i].isObstacle && voisins[0]!=0)
                 {
                         v3xa += (data[i].x-data[p].x)/voisins[0];
@@ -186,6 +201,7 @@ double * Boids::velocity3(int p)
                 }
           else if(perception(data[p],data[i],Agent::C) && data[i].isObstacle && voisins[1]!=0)
             {
+            
                         v3xo += (data[i].x-data[p].x)/voisins[1];
                         v3yo += (data[i].y-data[p].y)/voisins[1];
             }
@@ -226,11 +242,12 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 {
 
   int i;
+  double vMax =20;
   double * v1;
   double * v2;
   double * v3;
   double * v4;
-  double k = 2;
+  double k = 1;
   double vmax = 50;
   for(i=0; i<nb_agents ; i++)
   {
@@ -240,19 +257,19 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 	    v2 = velocity2(i);
 	    v3 = velocity3(i); 
 	    v4 = velocity4(i);
-	    if(data[i].y<50)
+	    if(data[i].y<40)
 	    {    
 	     data[i].vy = data[i].vy + k ;
 	    }
-	    else if(data[i].x>1200)
+	    else if(data[i].x>1230)
 	    {
 	     data[i].vx = -data[i].vx - k;
 	    }
-	    else if(data[i].y>900)
+	    else if(data[i].y>930)
 	    {
 	     data[i].vy = -data[i].vy - k ;
 	    }
-	    else if(data[i].x<50)
+	    else if(data[i].x<40)
 	    {
 	     data[i].vx = data[i].vx + k;
 	    }
@@ -262,7 +279,12 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 	    data[i].vy += h*(gamma1*v1[1] + gamma2*v2[1] + gamma3*v3[1]+ gamma4*v4[1]);   // on calcule les velocity1 2 et 3 à partir des vx et vy précédents
         }
 
-	    
+	    double normV = sqrt(data[i].vx*data[i].vx+data[i].vy*data[i].vy);
+      if(normV>vMax)
+      {
+		  data[i].vx=data[i].vx/(normV/vMax);
+		  data[i].vy=data[i].vy/(normV/vMax);
+	  }
       }  
   }
   
@@ -273,50 +295,28 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
   {
 	   
 	   int nbProies = proiePresDePredateur(datap[i]);
-	   if(datap[i].y<50)
+	   if(datap[i].y<40)
 	    {    
 	     datap[i].vy = datap[i].vy + k2 ;
 	    }
-	    else if(datap[i].x>1200)
+	    else if(datap[i].x>1230)
 	    {
 	     datap[i].vx = -datap[i].vx - k2;	     
 	    }
-	    else if(datap[i].y>900)
+	    else if(datap[i].y>930)
 	    {	     
 	     datap[i].vy = -datap[i].vy - k2;
 	    }
-	    else if(datap[i].x<50)
+	    else if(datap[i].x<40)
 	    {
 	     datap[i].vx = datap[i].vx + k2;	     
 	    }
-	    /*
-	    else if((nbProies !=0) || (datap[i].h<500))
-	    {
-			Agent a = predateurVoitProie(datap[i]);
-			
-			
-			if((sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y))<10 ))
-			{
-				mangerProie(a,datap[i]);
-			}
-			else   // non ici si h<20 il va quand même vers la prochaine proie
-			{
-			
-			datap[i].vx = (a.x - datap[i].x)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
-			datap[i].vy = (a.y - datap[i].y)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
-		    }
-		}
-	    else
-	    {
-	      datap[i].velocityPredator();
-	    }
-	    */
 	    
 	    else 
 	    {
-			if(datap[i].peutBouger())
-			
+			if(datap[i].peutBouger())	
 			{
+
 			  if(nbProies !=0)
 			  {	
 
@@ -328,22 +328,33 @@ void Boids::totalVelocity(double gamma1, double gamma2, double gamma3, double ga
 			  }
 			  else   
 			  {
-	            datap[i].vx = 2*(a.x - datap[i].x)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
-			    datap[i].vy = 2*(a.y - datap[i].y)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
+	            datap[i].vx = 3*(a.x - datap[i].x)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
+			    datap[i].vy = 3*(a.y - datap[i].y)/(sqrt((a.x - datap[i].x)*(a.x - datap[i].x)+(a.y - datap[i].y)*(a.y - datap[i].y)));
+		        datap[i].mort ++;
 		      }
 		      }
-		      else
-		      {
-				datap[i].velocityPredator();  
+		      else if(datap[i].mort==1000)
+              {
+				  printf("predateur doit mourir");
+                  nouveauPredateur();
+              }
+              else
+              {
+				datap[i].velocityPredator(); 
+				datap[i].mort ++; 
 			  }
-			}
+			  }
+		  
+
+			
 			else if(!datap[i].peutBouger())
 			{
 				datap[i].attente();
 			}
-			
 		}
-  }
+		}
+			
+		
 
 }
 
@@ -425,4 +436,13 @@ void Boids::mangerProie(Agent a, Predateur p)
 		  data[i]=data[i+1];
 	}
 	
+	datap[0].mort = 0;
+}
+
+void Boids::nouveauPredateur()
+{
+ // ou essayer d'effacer le tableau
+  Predateur p;
+  datap[0] = p;
+  datap[0].mort=0;
 }

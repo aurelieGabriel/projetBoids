@@ -65,6 +65,7 @@ class Predateur: public Agent
     static const double Rp;
     
     int a;
+    int mort;
     
 };
 

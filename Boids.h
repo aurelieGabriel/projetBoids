@@ -78,6 +78,7 @@ class Boids
     Agent predateurVoitProie(Predateur p);
     int proiePresDePredateur(Predateur p);
     void mangerProie(Agent a, Predateur p);
+    void nouveauPredateur();
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
