@@ -65,7 +65,7 @@ Predateur::~Predateur(void)
 
 void Predateur::velocityPredator()
 {
-	double vMax=7;
+	double vMax=4;
 
 	  
       vx +=(rand()/(double)RAND_MAX)*2 -1;

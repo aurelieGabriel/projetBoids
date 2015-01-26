@@ -17,9 +17,11 @@
 //                                 Project Files
 // ===========================================================================
 #include "Boids.h"
-#include "bwindow.h"
-#include<typeinfo>
-#include<math.h>
+
+#include <typeinfo>
+#include <math.h>
+#include "Agent.h"
+#include "Predateur.h"
 
 
 
@@ -40,35 +42,32 @@
 // ===========================================================================
 Boids::Boids(void)
 {
-
+  
+  nb_agents = 0;
+  data = new Agent[200];
   nb_agents = 150;
-  data = new Agent[150];
   
   int i;
-  for(i=0; i<nb_agents; i++)
+  for(i=0; i<150; i++)
   {
 	  Agent a ;
-	  Agent b= Agent(true);
-	  if(i<146)
-	  {
-		  data[i]= a;
-	  }
-	  else
-	  {
-		  data[i]= b;
-	  }
-	  
-	 
+	  data[i]=a;
+
   }
   
   datap = new Predateur[10];
   Predateur p;
   datap[0] = p;
-  printf("mort: %d",datap[0].mort);
+  //printf("mort: %d",datap[0].mort);
+  
 
 }
 
-
+Boids::Boids(int size)
+{
+  nb_agents = 0;
+  data = new Agent[size];
+}
 
 // ===========================================================================
 //                                  Destructor
@@ -113,12 +112,12 @@ bool Boids::perception(Agent a1, Agent a2, double d)
 int * Boids::neighbours( int position, double distance)
 {
 
-  int i;
+  int i=0;
   int * tab = new int[2];
   int nbObstacles, nbAgents = 0;
   for(i=0; i<nb_agents; i++)
     {
-        if(perception(data[i], data[position], distance))
+        if(perception(data[position], data[i], distance))
 	   {		   
 		   if(!data[i].isObstacle)
 		   {
@@ -131,7 +130,6 @@ int * Boids::neighbours( int position, double distance)
 	   }
     }
   nbAgents --;
-  nbObstacles --;
   tab[0]=nbAgents;
   tab[1]=nbObstacles;
   
@@ -208,6 +206,7 @@ double * Boids::velocity3(int p)
         }
   v3[0]= - v3xa - v3xo;
   v3[1]= - v3ya - v3yo;
+  delete [] voisins;
   return v3;
 }
 

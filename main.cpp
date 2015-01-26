@@ -3,13 +3,13 @@
 #include "Agent.h"
 #include "Boids.h"
 #include "Predateur.h"
-#include<typeinfo>
+#include <typeinfo>
 
 int main()
 {
 
    Boids b;
-  /* Agent o1 = Agent(true);
+   Agent o1 = Agent(true);
    Agent o2 = Agent(true);
    Agent o3 = Agent(true);
    Agent o4 = Agent(true);
@@ -17,12 +17,7 @@ int main()
    b.addAgent(o2);
    b.addAgent(o3);
    b.addAgent(o4);
-   
- 
-   Agent o1=Agent(true);
-   b.addAgent(o1);
-   Agent o2 =Agent(true);
-   b.addAgent(o2);*/
+
 
     
     bwindow win(1500,1500);
@@ -62,8 +57,9 @@ int main()
 	}
 	
 	
-	usleep(3000);
-	b.position(0.3,0.3,2,5,0.2);
+	usleep(5000);
+	
+	b.position(0.1,0.1,1.5,3.5,0.1);
 	
 	
 	
